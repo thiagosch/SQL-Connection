@@ -18,15 +18,15 @@ if (!$mysqli) {
     die('Could not connect: ' . mysql_error());
 }
 
-if (!isset($_GET['requestType'])) {
+if (!isset($_POST['requestType'])) {
     $requestType = false;
     print_r("'requestType' tiene que tener un valor (update,create, select)");
     exit();
-} elseif (!in_array($_GET['requestType'], $arrOfTypes)) {
-    print_r("requestType: '" . $_GET['requestType'] . "' No parece una opcion correcta");
+} elseif (!in_array($_POST['requestType'], $arrOfTypes)) {
+    print_r("requestType: '" . $_POST['requestType'] . "' No parece una opcion correcta");
     exit();
 } else {
-    $requestType = $_GET['requestType'];
+    $requestType = $_POST['requestType'];
 }
 
 switch ($requestType) {
@@ -64,8 +64,8 @@ if (in_array("no asignado", $arrErr)) {
 function checkIsSet($val, &$getkeys, &$arrErr)
 {
 
-    if (isset($_GET[$val])) {
-        $getkeys[$val] = $_GET[$val];
+    if (isset($_POST[$val])) {
+        $getkeys[$val] = $_POST[$val];
         $error = false;
     } else {
         if (array_key_exists($val, $arrErr)) {
@@ -77,23 +77,27 @@ function checkIsSet($val, &$getkeys, &$arrErr)
 
 switch ($requestType) {
     case "update":
-        $query = 'UPDATE ' . $_GET["table"] . '
-        SET ' . $_GET["col"] . ' = ' . $_GET["value"] . '
-        WHERE ' . $_GET["colWhere"] . ' = ' . $_GET["valueWhere"] . '';
+        $query = 'UPDATE ' . $_POST["table"] . '
+        SET ' . $_POST["col"] . ' = ' . $_POST["value"] . '
+        WHERE ' . $_POST["colWhere"] . ' = ' . $_POST["valueWhere"] . '';
 
         break;
     case "insert":
-        $query = 'INSERT INTO ' . $_GET["table"] . ' (' . $_GET["key"] . ')
-        VALUES (' . $_GET["value"] . ')';
+        $query = 'INSERT INTO ' . $_POST["table"] . ' (' . $_POST["key"] . ')
+        VALUES (' . $_POST["value"] . ')';
         break;
     case "select":
-        $query = 'SELECT ' . $_GET["col"] . ' FROM  ' . $_GET["table"] . ' WHERE  ' . $_GET["key"] . ' = ' . $_GET["value"] . '';
+        $query = 'SELECT ' . $_POST["col"] . ' FROM  ' . $_POST["table"] . ' WHERE  ' . $_POST["key"] . ' = ' . $_POST["value"] . '';
         break;
 }
 $result = $mysqli->query($query);
 if (!$result) {
     echo ("Error description: " . $mysqli->error);
 } else {
-    print_r("Ingresado correctamente");
+    if ($requestType == "select") {
+        print_r(json_encode(mysqli_fetch_all($result)));
+    } else {
+        print_r("Ingresado correctamente");
+    }
 
 }
