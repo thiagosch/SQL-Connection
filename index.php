@@ -4,6 +4,7 @@ include "auth.php";
 
 $arrOfTypes = ["update", "alter", "select", "insert"];
 $arrOfGet = ["key", "value", "table", "order", "col", "valueWhere", "keyWhere"];
+
 $arrErr = [];
 $arrUpdateErr = ["key" => "", "value" => "", "valueWhere" => "", "keyWhere" => "", "table" => ""];
 $arralterErr = [];
@@ -54,8 +55,10 @@ if (in_array("no asignado", $arrErr)) {
     foreach ($arrErr as $errKey => $errValue) {
         if ($arrErr[$errKey] == "no asignado") {
             print_r("'" . $errKey . "' " . $errValue . ". ");
+
         }
     }
+    exit();
 }
 
 function checkIsSet($val, &$getkeys, &$arrErr)
@@ -71,7 +74,6 @@ function checkIsSet($val, &$getkeys, &$arrErr)
     }
 
 }
-var_dump($getKeys);
 
 switch ($requestType) {
     case "update":
@@ -82,7 +84,7 @@ switch ($requestType) {
         $query = 0;
         break;
     case "select":
-        $query = "SELECT $col FROM $table WHERE $key = $value";
+        $query = 'SELECT ' . $_GET["col"] . ' FROM  ' . $_GET["table"] . ' WHERE  ' . $_GET["key"] . ' = ' . $_GET["value"] . '';
         break;
 }
 $result = $mysqli->query($query);
