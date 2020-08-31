@@ -83,8 +83,8 @@ switch ($requestType) {
 
         break;
     case "insert":
-        $query = "INSERT INTO $table ($keys)
-        VALUES ($values)";
+        $query = 'INSERT INTO ' . $_GET["table"] . ' (' . $_GET["key"] . ')
+        VALUES (' . $_GET["value"] . ')';
         break;
     case "select":
         $query = 'SELECT ' . $_GET["col"] . ' FROM  ' . $_GET["table"] . ' WHERE  ' . $_GET["key"] . ' = ' . $_GET["value"] . '';
@@ -97,8 +97,3 @@ if (!$result) {
     print_r("Ingresado correctamente");
 
 }
-
-?>
-<body style="background-color:black; color: white">
-
-</body>
