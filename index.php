@@ -3,15 +3,15 @@
 include "auth.php";
 
 $arrOfTypes = ["update", "alter", "select", "insert"];
-$arrOfGet = ["key", "value", "table", "order", "col", "valueWhere", "keyWhere"];
+$arrOfGet = ["key", "value", "table", "order", "col", "valueWhere", "colWhere"];
 
 $arrErr = [];
-$arrUpdateErr = ["key" => "", "value" => "", "valueWhere" => "", "keyWhere" => "", "table" => ""];
+$arrUpdateErr = ["value" => "", "valueWhere" => "", "colWhere" => "", "table" => ""];
 $arralterErr = [];
 $arrSelectErr = ["key" => "", "value" => "", "table" => "", "col" => ""];
 $arrInsertErr = ["key" => "", "value" => "", "table" => ""];
-$key = $value = $table = $order = $col = $valueWhere = $keyWhere = "";
-$keyerr = $valueerr = $colerr = $tableerr = $keyserr = $keyWhereerr = $valueWhereerr = "";
+$key = $value = $table = $order = $col = $valueWhere = $colWhere = "";
+$keyerr = $valueerr = $colerr = $tableerr = $keyserr = $colWhereeerr = $valueWhereerr = "";
 
 $mysqli = mysqli_connect($host, $user, $password, $dbName);
 if (!$mysqli) {
@@ -77,11 +77,14 @@ function checkIsSet($val, &$getkeys, &$arrErr)
 
 switch ($requestType) {
     case "update":
-        $query = "INSERT INTO $table ($keys)
-        VALUES ($values)";
+        $query = 'UPDATE ' . $_GET["table"] . '
+        SET ' . $_GET["col"] . ' = ' . $_GET["value"] . '
+        WHERE ' . $_GET["colWhere"] . ' = ' . $_GET["valueWhere"] . '';
+
         break;
     case "insert":
-        $query = 0;
+        $query = "INSERT INTO $table ($keys)
+        VALUES ($values)";
         break;
     case "select":
         $query = 'SELECT ' . $_GET["col"] . ' FROM  ' . $_GET["table"] . ' WHERE  ' . $_GET["key"] . ' = ' . $_GET["value"] . '';
